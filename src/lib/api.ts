@@ -11,6 +11,10 @@ export interface Pkg {
   hosted: boolean
   namespace?: string
   repo?: string
+  // unix seconds; 0/absent = unknown. published_at is the upstream publish
+  // time ("package updated"), stored_at is when we cached/published it.
+  stored_at?: number
+  published_at?: number
 }
 export interface Dl {
   id: number

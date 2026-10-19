@@ -24,6 +24,20 @@
   onMount(load)
 
   const formats = $derived([...new Set(packages.map((p) => p.format))].sort())
+
+  // fmtTime renders a unix-seconds timestamp as a short local date/time, or a
+  // dash when unknown (0/absent).
+  function fmtTime(sec?: number): string {
+    if (!sec) return '—'
+    return new Date(sec * 1000).toLocaleString(undefined, {
+      year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit',
+    })
+  }
+  function timeTitle(p: Pkg): string {
+    const pub = p.published_at ? `published ${fmtTime(p.published_at)}` : 'publish time unknown'
+    const sto = p.stored_at ? `cached ${fmtTime(p.stored_at)}` : 'cache time unknown'
+    return `${pub}\n${sto}`
+  }
   const shown = $derived(
     packages.filter(
       (p) =>
@@ -83,7 +97,7 @@
     <table class="w-full border-collapse">
       <thead><tr class="border-b border-border text-left text-micro uppercase tracking-wider text-muted-foreground">
         <th class="px-4 py-3 font-medium">package</th><th class="px-4 py-3 font-medium">version</th>
-        <th class="px-4 py-3 font-medium">origin</th><th class="px-4 py-3 text-right font-medium">size</th>
+        <th class="px-4 py-3 font-medium">origin</th><th class="px-4 py-3 font-medium">updated</th><th class="px-4 py-3 text-right font-medium">size</th>
         <th class="px-4 py-3 font-medium">install</th><th class="px-4 py-3"></th>
       </tr></thead>
       <tbody>
@@ -92,6 +106,7 @@
             <td class="px-4 py-3"><div class="flex items-center gap-2"><Badge variant="muted">{p.format}</Badge><span class="font-mono text-meta">{p.repository}</span></div></td>
             <td class="px-4 py-3 text-meta text-muted-foreground">{p.version}</td>
             <td class="px-4 py-3">{#if p.hosted}<Badge variant="success">hosted</Badge>{:else}<Badge variant="accent">cached</Badge>{/if}</td>
+            <td class="px-4 py-3 text-meta text-muted-foreground" title={timeTitle(p)}>{fmtTime(p.published_at)}</td>
             <td class="px-4 py-3 text-right text-meta tabular-nums text-muted-foreground">{fmtBytes(p.size)}</td>
             <td class="px-4 py-3">
               <div class="flex items-center gap-2">
