@@ -75,7 +75,9 @@ export class Api {
   upstreams = () => this.get<{ upstreams: Record<string, string> }>('/artifacts/system/upstreams')
   proxy = () => this.get<{ proxy: Record<string, string> }>('/artifacts/system/proxy')
   catalog = (owner?: string) =>
-    this.get<{ images: OciImage[] }>('/v2/_catalog' + (owner ? '?owner=' + encodeURIComponent(owner) : ''))
+    this.get<{ images: OciImage[] }>(
+      '/v2/_catalog' + (owner ? '?owner=' + encodeURIComponent(owner) : ''),
+    )
   deleteRepo = (repo: string) =>
     this.del('/artifacts/system/packages?repo=' + encodeURIComponent(repo))
 }

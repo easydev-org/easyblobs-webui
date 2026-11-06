@@ -28,20 +28,24 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22'
           cache: npm
 
       - run: npm ci --no-audit --no-fund
 
-      # `check` exists in some repos (biome + svelte-check + tsc) and not in
-      # others; run it only when defined, and never invent one.
-      - name: check
-        run: |
-          if node -e "process.exit(require('./package.json').scripts.check?0:1)"; then
-            npm run check
-          else
-            echo "no check script"
-          fi
+      # FORMAT: PRETTIER, AND ONLY PRETTIER.
+      #
+      # THIS REPOSITORY HAD NEITHER A FORMATTER NOR A LINTER before this. Its CI ran a conditional `check` step that
+      # printed "no check script" and passed, so a gate existed that checked nothing.
+      #
+      # Prettier is the formatter every other frontend in this org uses, so one configuration produces one style.
+      - name: format
+        run: npm run format:check
+
+      # LINT IS A SEPARATE QUESTION FROM FORMAT, and it is biome's: "is this code wrong" rather than "does this code
+      # look like the rest". Biome's formatter is disabled in biome.json, so it cannot rewrite a file prettier owns.
+      - name: lint
+        run: npm run lint
 
       - name: build
         run: npm run build

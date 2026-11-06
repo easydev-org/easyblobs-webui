@@ -12,17 +12,17 @@ endpoints validate.
 
 ## API surface
 
-| Endpoint | Use |
-|---|---|
-| `GET /artifacts/system/stats` | per-format rows / blobs / bytes / expired |
-| `GET /artifacts/system/packages` | all packages (format, repository, version, size, source, hosted, namespace, repo) |
-| `DELETE /artifacts/system/packages?repo=` | delete a repository's packages |
-| `GET /artifacts/system/repos` | upstream repo key → url |
-| `GET /artifacts/system/targets` | targets (protocol/kind/base/hosts/auth/builtin) |
-| `GET /artifacts/system/upstreams` | upstream url overrides |
-| `GET /artifacts/system/proxy` | per-key proxy policy |
-| `GET /artifacts/system/downloads` | in-flight upstream downloads (progress) |
-| `GET /v2/_catalog[?owner=]` | OCI images + tags |
+| Endpoint                                  | Use                                                                               |
+| ----------------------------------------- | --------------------------------------------------------------------------------- |
+| `GET /artifacts/system/stats`             | per-format rows / blobs / bytes / expired                                         |
+| `GET /artifacts/system/packages`          | all packages (format, repository, version, size, source, hosted, namespace, repo) |
+| `DELETE /artifacts/system/packages?repo=` | delete a repository's packages                                                    |
+| `GET /artifacts/system/repos`             | upstream repo key → url                                                           |
+| `GET /artifacts/system/targets`           | targets (protocol/kind/base/hosts/auth/builtin)                                   |
+| `GET /artifacts/system/upstreams`         | upstream url overrides                                                            |
+| `GET /artifacts/system/proxy`             | per-key proxy policy                                                              |
+| `GET /artifacts/system/downloads`         | in-flight upstream downloads (progress)                                           |
+| `GET /v2/_catalog[?owner=]`               | OCI images + tags                                                                 |
 
 ## Pages
 
