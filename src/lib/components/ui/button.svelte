@@ -7,12 +7,15 @@
     size = 'default',
     class: klass = '',
     onclick,
+    title = '',
     children,
   }: {
     variant?: 'default' | 'outline' | 'ghost'
     size?: 'default' | 'sm'
     class?: string
     onclick?: (e: MouseEvent) => void
+    /** A tooltip. ICON-ONLY BUTTONS NEED IT: a trash icon with no text and no title is unlabelled to a screen reader. */
+    title?: string
     children: Snippet
   } = $props()
 
@@ -33,6 +36,7 @@
     klass,
   )}
   {onclick}
+  {title}
 >
   {@render children()}
 </button>

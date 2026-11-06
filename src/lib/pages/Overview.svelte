@@ -22,11 +22,25 @@
   const totalRows = $derived(stats.reduce((a, s) => a + s.rows, 0))
   const totalBytes = $derived(stats.reduce((a, s) => a + s.bytes, 0))
   const maxBytes = $derived(Math.max(1, ...stats.map(s => s.bytes)))
+
+  /**
+   * THE FOUR SUMMARY TILES, as objects rather than tuples.
+   *
+   * A TUPLE ARRAY THAT MIXES STRINGS AND COMPONENTS INFERS AS A UNION of both, so `<Icon />` became "string or
+   * component" and svelte-check refused it. The tuple also relied on positional meaning — a third element that one
+   * row has and another does not — which is exactly the shape a reader has to count to understand.
+   */
+  const tiles = $derived([
+    { label: 'packages', value: totalRows.toLocaleString(), icon: Package },
+    { label: 'storage', value: fmtBytes(totalBytes), icon: HardDrive },
+    { label: 'formats', value: String(stats.length), icon: Boxes },
+    { label: 'downloading', value: String(active), icon: CloudDownload },
+  ])
 </script>
 
 {#if err}<p class="mb-3 text-meta text-destructive">{err}</p>{/if}
 <div class="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-  {#each [['packages', totalRows.toLocaleString(), Package], ['storage', fmtBytes(totalBytes), HardDrive], ['formats', String(stats.length), Boxes], ['downloading', String(active), CloudDownload]] as [label, value, Icon] (label)}
+  {#each tiles as { label, value, icon: Icon } (label)}
     <div class="rounded-lg border border-border bg-card p-4">
       <div
         class="flex items-center gap-1.5 text-micro uppercase tracking-wider text-muted-foreground"

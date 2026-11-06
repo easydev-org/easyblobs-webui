@@ -20,15 +20,27 @@
     return () => clearInterval(t)
   })
   const pct = (x: Dl) => (x.total > 0 ? Math.min(100, (100 * x.written) / x.total) : 0)
+
   const sum = $derived(items.reduce((a, x) => a + x.written, 0))
   const rate = $derived(items.reduce((a, x) => a + x.rate_bps, 0))
   const longest = $derived(
     items.length ? Math.max(...items.map(x => x.elapsed_sec)).toFixed(1) + 's' : '—',
   )
+
+  /**
+   * THE FOUR SUMMARY TILES, as objects rather than tuples — see Overview for the same change and why:
+   * a tuple mixing strings and components infers as a union of both, and `<Icon />` stops being legal.
+   */
+  const tiles = $derived([
+    { label: 'active', value: String(items.length), icon: CloudDownload },
+    { label: 'in flight', value: fmtBytes(sum), icon: ArrowDownToLine },
+    { label: 'throughput', value: fmtRate(rate), icon: Gauge },
+    { label: 'longest', value: longest, icon: Timer },
+  ])
 </script>
 
 <div class="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-  {#each [['active', String(items.length), CloudDownload], ['in flight', fmtBytes(sum), ArrowDownToLine], ['throughput', fmtRate(rate), Gauge], ['longest', longest, Timer]] as [label, value, Icon] (label)}
+  {#each tiles as { label, value, icon: Icon } (label)}
     <div class="rounded-lg border border-border bg-card p-4">
       <div
         class="flex items-center gap-1.5 text-micro uppercase tracking-wider text-muted-foreground"

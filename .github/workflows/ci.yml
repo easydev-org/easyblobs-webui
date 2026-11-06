@@ -47,6 +47,14 @@ jobs:
       - name: lint
         run: npm run lint
 
+      # TYPES. `svelte-check` reports a type error inside a `.svelte` file that vite happily bundles, so a
+      # build-only gate lets it through and it fails at runtime instead.
+      #
+      # THIS GATE DID NOT EXIST. The repository's errors were all an unresolvable `$lib` alias — the vite config had
+      # it, the tsconfig did not — so every import looked missing and 26 of them were reported as failures.
+      - name: types
+        run: npm run check:svelte
+
       - name: build
         run: npm run build
 
